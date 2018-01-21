@@ -10,9 +10,6 @@ homeassistant:
 recorder:
   db_url: sqlite:////home/binarin/.homeassistant/hass.sqlite3
 
-# Show links to resources in log and frontend
-introduction:
-
 # Enables the frontend
 frontend:
 
@@ -63,6 +60,23 @@ tts:
 # Cloud
 cloud:
 
+mqtt:
+  broker: 127.0.0.1
+  username: led-strip-1
+  password: !secret mqtt_password
+
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
+
+switch:
+  - platform: mqtt
+    name: "WIP LED Strip"
+    state_topic: "home/office/wip-led-strip"
+    command_topic: "home/office/wip-led-strip/set"
+    availability_topic: "home/office/wip-led-strip/available"
+    retain: true
+    payload_on: "ON"
+    payload_off: "OFF"
+    payload_available: "ONLINE"
+    payload_not_available: "OFFLINE"
