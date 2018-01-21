@@ -69,14 +69,30 @@ group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
 
-switch:
-  - platform: mqtt
+light:
+  - platform: mqtt_json
     name: "WIP LED Strip"
-    state_topic: "home/office/wip-led-strip"
-    command_topic: "home/office/wip-led-strip/set"
-    availability_topic: "home/office/wip-led-strip/available"
+    rgb: true
+    brightness: true
     retain: true
-    payload_on: "ON"
-    payload_off: "OFF"
+    state_topic: "home/office/wip-led-strip"
+    availability_topic: "home/office/wip-led-strip/available"
+    command_topic: "home/office/wip-led-strip/set"
     payload_available: "ONLINE"
     payload_not_available: "OFFLINE"
+
+media_player:
+  - platform: kodi
+    host: 192.168.2.4
+    name: Kodi
+    username: kodi
+    password: !secret kodi
+    turn_on_action:
+      service: wake_on_lan.send_magic_packet
+      data:
+        mac: d8:50:e6:bf:91:63
+    turn_off_action:
+      service: media_player.kodi_call_method
+      data:
+        entity_id: media_player.kodi
+        method: System.Hibernate
